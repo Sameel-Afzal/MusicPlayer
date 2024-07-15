@@ -117,6 +117,7 @@ public class AudioPlayerGUI extends JFrame {
         playbackSlider.setBounds(getWidth()/2 - 300/2, 365, 300, 50);
         playbackSlider.setBackground(null);
         playbackSlider.setColors(new Color(0x81A263), new Color(0x365E32));
+        playbackSlider.setTrackSize(2);
         playbackSlider.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -172,23 +173,10 @@ public class AudioPlayerGUI extends JFrame {
         JMenu audioMenu = new JMenu("Song");
         menuBar.add(audioMenu);
 
-        // Get the user's home directory
-        String userHome = System.getProperty("user.home");
-
-        // Determine the Music directory based on the operating system
-        String musicPath;
-        String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("win")) 
-            musicPath = userHome + "\\Music";
-        else if (osName.contains("mac") || osName.contains("nix") || osName.contains("nux") || osName.contains("aix"))
-            musicPath = userHome + "/Music";
-        else
-            musicPath = userHome + "/Music"; // Default path for unknown OS
-
         // add the "load audio" item in the audioMenu
         JMenuItem loadAudio = new JMenuItem("load song");
         loadAudio.addActionListener(e -> {
-            jFileChooser.setCurrentDirectory(musicPath);
+            jFileChooser.setCurrentDirectory(getMusicPath());
             jFileChooser.showOpenDialog(AudioPlayerGUI.this);
 
             File selectedFile = jFileChooser.getSelectedFile();
@@ -425,6 +413,24 @@ public class AudioPlayerGUI extends JFrame {
         pauseButton.setVisible(false);
         pauseButton.setEnabled(false);
 
+    }
+
+    public String getMusicPath() {
+        // Get the user's home directory
+        String userHome = System.getProperty("user.home");
+
+        // Determine the Music directory based on the operating system
+        String musicPath;
+
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("win")) 
+            musicPath = userHome + "\\Music";
+        else if (osName.contains("mac") || osName.contains("nix") || osName.contains("nux") || osName.contains("aix"))
+            musicPath = userHome + "/Music";
+        else
+            musicPath = userHome + "/Music"; // Default path for unknown OS
+
+        return musicPath;
     }
 
     private ImageIcon loadImage(String imagePath) {
